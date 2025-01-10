@@ -20,6 +20,8 @@ public class MFSKGridNode: SKSpriteNode {
     
     public var grid: MFGrid
 
+    public var gridStyle = MFGridStyle()
+    
     // MARK:  Initialisation
     
     /// Init a grid node using grid and cell sizes
@@ -50,7 +52,7 @@ public class MFSKGridNode: SKSpriteNode {
         size = grid.frame.size
         do {
             texture = try makeTexture() { context, size in
-                self.grid.render(context: context, style: MFGridStyle())
+                self.grid.render(context: context, style: gridStyle)
             }
         }
         catch {
@@ -88,7 +90,7 @@ public class MFSKDataGridNode<DataType: Equatable>: MFSKGridNode {
         size = grid.frame.size
         do {
             texture = try makeTexture() { context, size in
-                self.grid.render(context: context, style: MFGridStyle())
+                self.grid.render(context: context, style: gridStyle)
                 self.dataLayers.first?.renderData(in: context)
             }
         } catch {

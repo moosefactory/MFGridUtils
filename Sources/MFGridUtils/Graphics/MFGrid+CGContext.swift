@@ -33,15 +33,18 @@ public extension MFGrid {
         context.setFillColor(style.fillColor.cgColor)
         context.setStrokeColor(style.strokeColor.cgColor)
         
+        context.addRect(frame)
+        context.fillPath()
+        
         dataLayers.forEach { layer in
             layer.dataLayer.renderData(in: context)
         }
-        
+                
         MFGridScanner(gridSize: gridSize).geometricScanRow(grid: self) { cell in
             context.move(to: cell.locationInFrame)
             context.addLine(to: CGPoint(x: cell.locationInFrame.x, y: size.height))
         }
-        
+
         MFGridScanner(gridSize: gridSize).geometricScanColumn(grid: self) { cell in
             context.move(to: cell.locationInFrame)
             context.addLine(to: CGPoint(x: size.width, y: cell.locationInFrame.y))

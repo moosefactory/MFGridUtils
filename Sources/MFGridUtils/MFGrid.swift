@@ -53,8 +53,8 @@ public class MFGrid {
         guard index >= 0, index < gridSize.numberOfCells else {
             return nil
         }
-        let col = index % gridSize.columns
         let row = index / gridSize.columns
+        let col = index % gridSize.columns
         
         return MFGridLocation(h: col, v: row)
     }

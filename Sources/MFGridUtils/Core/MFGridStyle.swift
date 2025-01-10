@@ -14,15 +14,15 @@ import AppKit
 
 public struct MFGridStyle {
     
-    public init(strokeColor: PlatformColor = .white,
-                fillColor: PlatformColor = .white.withAlphaComponent(0.3),
+    public init(strokeColor: PlatformColor = .black,
+                fillColor: PlatformColor = .white,
                 strokeWidth: CGFloat = 1) {
         self.strokeColor = strokeColor
         self.fillColor = fillColor
         self.strokeWidth = strokeWidth
     }
     
-    var strokeColor: PlatformColor = .white
+    var strokeColor: PlatformColor = .black
     var fillColor: PlatformColor = .white
     var strokeWidth: CGFloat = 1
 }
