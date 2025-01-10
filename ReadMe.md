@@ -1,37 +1,51 @@
-# MFFoundation
-*Used for years. Recrafted with care.*
+# MFGridUtils
+*Grid scanning made easy*
 
-![MacDown logo](Icon_128.png)
+A simple **Foundation** and **CoreGraphics** extension to execute operations on grids**
 
-**NSFoundation** and **CoreGraphics** helpers.
+## Description
 
-MFFoundation is a collection of must have extensions for swift. 
+**Grids are 2 dimensions arrays with a minimal size of 1.**
 
+Principal types are the following :
+
+### GridLocation
+
+A location in a grid, given column an row
+
+### GridSize
+
+A grid size, in columns and rows
+
+### GridCell
+
+A grid cell, containing location in grid and rect in frame
+
+
+![MFGridUtils Scheme](MFGridUtilsScheme.png)
 
 ## Classes
 
-### CoreGraphics
+### MFGridUtils
 
-CGSize+Extras.swift
-CGContext+Bitmap.swift
-CGFloat+Extras.swift
-CGGeometry+Operators.swift
-CGPoint+Extras.swift
-CGRect+Extras.swift
+The main library file
 
-### Foundation
+### MFGridLocation
 
-Codable+JSON.swift
-FileManager+Extras.swift
-FileWrapper+Extras.swift
-Formatters.swift
-Image+Extras.swift
-MFFoundation.swift
-Random.swift
-String+Extras.swift
-SystemUtils.swift
-URL+Extras.swift
+Defines a location in grid, with column and row
+
+### MFSKGridNode
+
+A grid node for SpriteKit
+
+### MFGridScanner
+
+Iterate through grid cells
+
+### MFGridSize
+
+Defines grid dimensions in columns and rows
 
 --
 
-*©2007-2024 Moose Factory Software*
+*©2024 Moose Factory Software*
