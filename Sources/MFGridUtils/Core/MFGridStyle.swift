@@ -10,7 +10,11 @@
 import Foundation
 import CoreGraphics
 import MFFoundation
+#if os(iOS)
+import UIKit
+#else
 import AppKit
+#endif
 
 public struct MFGridStyle {
     
