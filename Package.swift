@@ -24,7 +24,7 @@ let package = Package(
             targets: ["MFGridUtils"]),
     ],
     dependencies: [
-        .package(path: "../MFFoundation"),
+        .package(url: "git@github.com:moosefactory/MFFoundation.git", .upToNextMajor(from: "2.0.0"))
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.

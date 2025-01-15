@@ -10,7 +10,7 @@
 import Foundation
 import CoreGraphics
 import MFFoundation
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 #else
 import AppKit

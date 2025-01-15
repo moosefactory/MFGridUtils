@@ -1,7 +1,8 @@
 # MFGridUtils
 *Grid scanning made easy*
 
-A simple **Foundation** and **CoreGraphics** extension to execute operations on grids**
+
+A simple **Foundation** and **CoreGraphics** extension to execute operations on grids.
 
 ## Description
 
