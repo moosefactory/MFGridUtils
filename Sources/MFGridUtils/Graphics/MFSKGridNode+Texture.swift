@@ -1,11 +1,11 @@
-//   /\/\__/\/\      MFGridUtils
-//   \/\/..\/\/      Grid scanning made easy
+//   /\/\__/\/\      􀮟 MFGridUtils
+//   \/\/..\/\/      Efficient grid scanning
 //      (oo)
 //  MooseFactory     ©2025 - Moose
 //    Software
 //  ------------------------------------------
-//  MFSKGridTexture.swift
-//  Created by Tristan Leblanc on 07/01/2025.
+//  􀈿 MFSKGridTexture.swift
+//  􀓣 Created by Tristan Leblanc on 07/01/2025.
 
 import Foundation
 import SpriteKit

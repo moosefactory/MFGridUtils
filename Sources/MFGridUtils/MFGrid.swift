@@ -1,13 +1,12 @@
-//   /\/\__/\/\      MFGridUtils
-//   \/\/..\/\/      Grid scanning made easy
+//   /\/\__/\/\      􀮟 MFGridUtils
+//   \/\/..\/\/      Efficient grid scanning
 //      (oo)
 //  MooseFactory     ©2025 - Moose
 //    Software
 //  ------------------------------------------
-//  MFGrid.swift
-//  Created by Tristan Leblanc on 08/01/2025.
+//  􀈿 MFGrid.swift
+//  􀓣 Created by Tristan Leblanc on 08/01/2025.
 
-import Foundation
 import MFFoundation
 import CoreGraphics
 
@@ -18,9 +17,15 @@ import CoreGraphics
 /// Everything to create a grid object and associate data is here in one place
 
 public class MFGrid {
+    
     public var gridSize: MFGridSize
     public var cellSize: CGSize
     
+    public struct GridRect {
+        var origin: MFGridLocation = .zero
+        var size: MFGridSize = .zero
+    }
+
     // MARK: - Initialisation
     
     
@@ -35,14 +40,16 @@ public class MFGrid {
         self.cellSize = cellSize
     }
     
+    /// Returns the grid frame expressed in columns and rows
+    public var gridRect: MFGridRect { MFGridRect(origin: .zero, size: gridSize) }
+    
     /// Returns the grid frame if the grid cell is set
     public var frame: CGRect { gridSize.frame(for: cellSize) }
-    
+
     // TODO: Move in GridRenderer
     func renderContent(in context: CGContext) {
         
     }
-    
 }
 
 // MARK: - Scan
@@ -50,13 +57,12 @@ public class MFGrid {
 extension MFGrid {
     
     // Proceed to a simple geometric scan over the grid
-    func scan(_ closure: @escaping MFGridScannerClosure) {
+    public func scan(_ closure: @escaping MFGridScannerClosure) {
         scanner().cellScan() { scanner in
             closure(scanner)
         }
     }
 
-    
     /// Converts cell index to grid location
     ///
     /// Returns nil if the index is out of grid
@@ -68,7 +74,6 @@ extension MFGrid {
         return MFGridLocation(h: index / gridSize.columns,
                               v: index % gridSize.columns)
     }
-
 }
 
 // MARK: - Geometry Extension

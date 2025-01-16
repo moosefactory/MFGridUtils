@@ -1,11 +1,11 @@
-//   /\/\__/\/\      MFGridUtils
-//   \/\/..\/\/      Grid scanning made easy
+//   /\/\__/\/\      􀮟 MFGridUtils
+//   \/\/..\/\/      Efficient grid scanning
 //      (oo)
 //  MooseFactory     ©2025 - Moose
 //    Software
 //  ------------------------------------------
 //  MFGridDataLayer.swift
-//  Created by Tristan Leblanc on 07/01/2025.
+//  􀓣 Created by Tristan Leblanc on 07/01/2025.
 
 import Foundation
 import MFFoundation

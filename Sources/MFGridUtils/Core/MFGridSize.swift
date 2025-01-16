@@ -1,11 +1,11 @@
-//   /\/\__/\/\      MFGridUtils
-//   \/\/..\/\/      Grid scanning made easy
+//   /\/\__/\/\      􀮟 MFGridUtils
+//   \/\/..\/\/      Efficient grid scanning
 //      (oo)
 //  MooseFactory     ©2025 - Moose
 //    Software
 //  ------------------------------------------
 //  MFGridSize.swift
-//  Created by Tristan Leblanc on 22/12/2024.
+//  􀓣 Created by Tristan Leblanc on 22/12/2024.
 
 import Foundation
 import MFFoundation
@@ -16,6 +16,8 @@ public struct MFGridSize: Codable {
     enum Errors: Error {
         case gridDimensionMustBeGreaterOrEqualToZero
     }
+    
+    static let zero = MFGridSize(size: 0)
     
     public var columns: Int { didSet {
         numberOfCells = columns * rows
@@ -138,7 +140,7 @@ public extension MFGridSize {
     
     // Returns a grid scanner 
     func scanner() -> MFGridScanner {
-        MFGridScanner(with: self)
+        MFGridScanner(with: MFGrid(gridSize: self))
     }
 }
 

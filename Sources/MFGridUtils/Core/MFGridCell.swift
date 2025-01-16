@@ -1,11 +1,11 @@
-//   /\/\__/\/\      MFGridUtils
-//   \/\/..\/\/      Grid scanning made easy
+//   /\/\__/\/\      􀮟 MFGridUtils
+//   \/\/..\/\/      Efficient grid scanning
 //      (oo)
 //  MooseFactory     ©2025 - Moose
 //    Software
 //  ------------------------------------------
 //  GridCell.swift
-//  Created by Tristan Leblanc on 08/01/2025.
+//  􀓣 Created by Tristan Leblanc on 08/01/2025.
 
 import Foundation
 
