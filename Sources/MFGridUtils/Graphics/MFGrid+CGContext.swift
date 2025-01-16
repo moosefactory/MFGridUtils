@@ -42,7 +42,6 @@ public extension MFGrid {
         // Draw the horizontal and vertical grid lines
         scanner().scanRow { scanner in
             if let cellFrame = scanner.cell.frame {
-                print(cellFrame)
                 context.move(to: CGPoint(x: cellFrame.origin.x, y: 0))
                 context.addLine(to: CGPoint(x: cellFrame.origin.x, y: size.height))
             }
@@ -53,8 +52,6 @@ public extension MFGrid {
 
         scanner().scanColumn { scanner in
             if let cellFrame = scanner.cell.frame {
-                print(cellFrame)
-
                 context.move(to: CGPoint(x: 0, y: cellFrame.origin.y))
                 context.addLine(to: CGPoint(x: size.width, y: cellFrame.origin.y))
             }
