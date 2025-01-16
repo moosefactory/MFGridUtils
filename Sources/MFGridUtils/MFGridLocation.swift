@@ -14,7 +14,7 @@ import CoreGraphics
 public extension MFGrid {
     
     /// A location in grid, expressed by column index (h) and row index (v)
-
+    
     struct Location: Hashable {
         
         public static let zero = MFGridLocation(h: 0, v: 0)
@@ -117,3 +117,20 @@ extension MFGridLocation: CustomStringConvertible {
     }
 }
 
+// MARK: - Neighbours locations
+
+extension MFGridLocation {
+    
+    public var neighboursLocations: [MFGridLocation] {
+
+        let offsets = [
+            (-1,-1), (0,-1), (1,-1),
+            (-1,0), (1,0),
+            (-1,1), (0,1), (1,1),
+        ]
+        
+        return offsets.map { offset in
+            MFGridLocation(h: h + offset.0, v: v + offset.1)
+        }
+    }
+}
