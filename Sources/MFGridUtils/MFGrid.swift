@@ -17,54 +17,58 @@ import CoreGraphics
 ///
 /// Everything to create a grid object and associate data is here in one place
 
-public protocol DataLayerProtocol: Any {
-    func renderData(in context: CGContext)
-}
-
-public struct MFGridDataLayerItem {
-    public init(dataLayer: DataLayerProtocol, type: AnyObject.Type) {
-        self.dataLayer = dataLayer
-        self.type = type
-    }
-    
-    public var dataLayer: DataLayerProtocol
-    public var type: AnyObject.Type
-}
-
 public class MFGrid {
-    
     public var gridSize: MFGridSize
     public var cellSize: CGSize
-    public var dataLayers: [MFGridDataLayerItem]
-    
-    public var frame: CGRect { gridSize.frame(for: cellSize) }
     
     // MARK: - Initialisation
     
+    
+    /// Initializes a grid of the given size
+    /// An optional cellSize can be set if a geometric representation is needed
+    /// - Parameters:
+    ///   - gridSize: The size of the grid ( columns x rows )
+    ///   - cellSize: An optional grid cell size
     public init(gridSize:MFGridSize,
-                cellSize: CGSize,
-                dataLayers: [MFGridDataLayerItem] = []) {
+                cellSize: CGSize = .zero) {
         self.gridSize = gridSize
         self.cellSize = cellSize
-        self.dataLayers =  dataLayers
     }
     
+    /// Returns the grid frame if the grid cell is set
+    public var frame: CGRect { gridSize.frame(for: cellSize) }
+    
+    // TODO: Move in GridRenderer
+    func renderContent(in context: CGContext) {
+        
+    }
+    
+}
+
+// MARK: - Scan
+
+extension MFGrid {
+    
+    // Proceed to a simple geometric scan over the grid
+    func scan(_ closure: @escaping MFGridScannerClosure) {
+        scanner().cellScan() { scanner in
+            closure(scanner)
+        }
+    }
+
+    
+    /// Converts cell index to grid location
+    ///
+    /// Returns nil if the index is out of grid
+
     public func location(at index: Int) -> MFGridLocation? {
         guard index >= 0, index < gridSize.numberOfCells else {
             return nil
         }
-        let row = index / gridSize.columns
-        let col = index % gridSize.columns
-        
-        return MFGridLocation(h: col, v: row)
+        return MFGridLocation(h: index / gridSize.columns,
+                              v: index % gridSize.columns)
     }
-    
-    // Proceed to a simple geometric scan over the grid
-    func scan(_ closure: @escaping MFGridGeoScanClosure) {
-        MFGridScanner(grid: self).geometricScan(cellSize: cellSize) { cell in
-            closure(cell)
-        }
-    }
+
 }
 
 // MARK: - Geometry Extension
@@ -72,13 +76,17 @@ public class MFGrid {
 extension MFGrid {
     
     /// Returns the rectangle in node coordinate of the cell at passed location in grid (column, row)
+    /// - Parameter cell: the cell we want to know the frame
+    /// - Returns: The CGRect frame of the cell
     
     public func rect(for cell: MFGridCell) -> CGRect {
         rectForCell(at: cell.gridLocation)
     }
     
-    // Returns the frame of the cell at given location, in grid frame coordinates.
-    
+    /// Returns the frame of the cell at given location, in grid frame coordinates.
+    /// - Parameter gridLocation: The grid locationwe want to know the frame
+    /// - Returns: The CGRect frame of the cell at given location, if the cell size is known
+
     public func rectForCell(at gridLocation: MFGridLocation) -> CGRect {
         let location = gridLocation.toPoint(for: cellSize)
         let offset = frame.boundsCenter
@@ -103,4 +111,9 @@ extension MFGrid {
                               v: Int((locationInFrame.y / frame.size.height) * gridSize.rows))
     }
     
+    public func location(for gridLocation: MFGridLocation) -> CGPoint? {
+        let gridLoc = gridLocation.asCGFloats
+        return CGPoint(x: gridLoc.h * cellSize.width,
+                              y: gridLoc.v * cellSize.height)
+    }
 }

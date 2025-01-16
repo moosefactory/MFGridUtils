@@ -10,24 +10,24 @@
 import Foundation
 import CoreGraphics
 
-/// A location in grid coordinates
+/// A location in grid, expressed by column index (h) and row index (v)
 
 public struct MFGridLocation {
     
     public static let zero = MFGridLocation(h: 0, v: 0)
     
-    public var h: Int = 0
-    public var v: Int = 0
+    public var h: Int
+    public var v: Int
     
     public var column: Int { h }
     public var row: Int { v }
     
-    public init(h: Int = 1, v: Int = 1) {
+    public init(h: Int = 0, v: Int = 0) {
         self.h = h
         self.v = v
     }
     
-    /// Returns the location converted to [0.0,1.0] range for a given grid size
+    /// Returns the location converted to [0.0, 1.0] range for a given grid size
     
     public func fractionalLocation(for gridSize: MFGridSize) -> CGPoint {
         return CGPoint(x: CGFloat(h) / CGFloat(gridSize.columns),
@@ -84,10 +84,15 @@ extension MFGridLocation: Equatable {
     public static func == (lhs: MFGridLocation, rhs: MFGridLocation) -> Bool {
         return lhs.h == rhs.h && lhs.v == rhs.v
     }
+
+    public static func != (lhs: MFGridLocation, rhs: MFGridLocation) -> Bool {
+        return lhs.h != rhs.h && lhs.v != rhs.v
+    }
 }
 
 public extension CGPoint {
     
+    /// Converts a point to a location in the grid
     func toGridlocation(cellSize: CGSize) -> MFGridLocation {
         MFGridLocation(h: Int(x / cellSize.width), v: Int(y / cellSize.height))
     }

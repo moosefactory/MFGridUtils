@@ -1,6 +1,7 @@
 # MFGridUtils
 *Grid scanning made easy*
 
+![MFGridUtils logo](Icon_128.png)
 
 A simple **Foundation** and **CoreGraphics** extension to execute operations on grids.
 
@@ -13,6 +14,23 @@ Principal types are the following :
 ### GridLocation
 
 A location in a grid, given column an row
+
+```
+// Makes a 10 x 10 grid
+let gridSize = MFGridSize(10)
+
+MFGridScanner(with: gridSize).scan { scanner in
+    print("Cell at index \(scanner.index) - location: \(scanner.location)")
+}
+
+Results:
+Cell at index 0 - location: [col:0;row:0]
+Cell at index 1 - location: [col:1;row:0]
+Cell at index 2 - location: [col:2;row:0]
+...
+Cell at index 99 - location: [col:9;row:9]
+
+```
 
 ### GridSize
 

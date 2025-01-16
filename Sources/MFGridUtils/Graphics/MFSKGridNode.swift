@@ -19,7 +19,7 @@ public class MFSKGridNode: SKSpriteNode {
     }
     
     public var grid: MFGrid
-
+    
     public var gridStyle = MFGridStyle()
     
     // MARK:  Initialisation
@@ -35,16 +35,15 @@ public class MFSKGridNode: SKSpriteNode {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.grid = try! MFGrid(gridSize: MFGridSize(size: 100),
-                                cellSize: CGSize.square(30),
-                                dataLayers: [])
+        self.grid = MFGrid(gridSize: MFGridSize(size: 100),
+                           cellSize: CGSize.square(30))
         super.init(coder: aDecoder)
         
         updateGrid()
     }
     
     /// Rebuilds grid sprites
-
+    
     /// Called when geometry need to be updated
     /// - after a resize
     /// - after grid size or cell size change

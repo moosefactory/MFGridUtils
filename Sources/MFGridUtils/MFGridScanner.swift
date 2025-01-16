@@ -14,135 +14,122 @@ import Foundation
 /// MFGridScanner can be constructed from a MFGrid object,
 /// or simply with a MFGridSize.
 
+public typealias MFGridScannerIndexAndLocationClosure = (Int, MFGridLocation)->Void
+public typealias MFGridScannerClosure = (MFGridScanner)->Void
+
 open class MFGridScanner {
     
-    /// The size of the grid to scan
     
-    public var gridSize: MFGridSize
+    public class Cell {
+        
+        public init(size: CGSize? = nil) {
+            self.cellSize = size
+            self.frame = size != nil ? CGRect(origin: .zero, size: size!) : nil
+        }
+        
+        /// The index of the cell
+        /// Can be used to map to arrays or buffers
+        public var index: UInt = 0
+        
+        /// The location in grid ( column, row) of the cell
+        public var gridLocation: MFGridLocation = .zero
+        
+        /// The frame of the cell, in [0.0,1.0] range
+        /// Bottom left frame is {0, 0, 1.0 / gridSize.columns, 1.0 / gridSize.rows)
+        public var fractionalFrame: CGRect = .zero
+
+        /// An optional cell size.
+        /// Cell size must be set to compute the following geometric properties
+        public var cellSize: CGSize?
+        
+        /// The frame of the cell, in grid frame coordinates
+        /// Bottom left frame is {0,0,cellSize.width, cellSize.height)
+        public var frame: CGRect?
+        
+        /// An optional grid.
+        /// Scanner can be created with a grid, heriting of its gridSize and cellSize properties
+        /// If a data grid is set, the data can be accessed more easily and safely in the iterator
+        public var grid: MFGrid?
+
+        public var key: MFGridLocationKey { gridLocation.asKey }
+    }
+    
+    /// The size of the grid to scan.
+    /// If the scanner is created with a grid, grid size is set to the grid size
+    public let gridSize: MFGridSize
 
     /// An optional reference to a grid object
-    public weak var grid: MFGrid?
+    public let grid: MFGrid?
 
+    /// An optional reference to a grid object
+    public var cell = Cell()
+    
     // MARK: - Initializers
     
-    public init(grid: MFGrid) {
+    public init(with grid: MFGrid) {
         self.grid = grid
         self.gridSize = grid.gridSize
     }
     
-    public init(gridSize: MFGridSize) {
+    public init(with gridSize: MFGridSize) {
+        self.grid = nil
         self.gridSize = gridSize
     }
 
     // MARK: - Scan
     
-    /// Scans a grid by passing cell array index and location in grid to block
+    /// Scans a grid by passing index and gridLocation in closure
+    /// The fastest scan
     
-    public func scan(_ block: @escaping MFGridLocationClosure) {
-        var index = 0
-        for j in 0 ..< gridSize.rows {
-            for i in 0 ..< gridSize.columns {
-                block(MFGridLocation(h: i, v: j))
-                index += 1
-            }
-        }
-    }
-    
-    public func scanIndexed(_ block: @escaping MFGridIndexedLocationClosure) {
-        var index = 0
+    public func scan(_ block: @escaping MFGridScannerIndexAndLocationClosure) {
+        var index: Int = 0
         for j in 0 ..< gridSize.rows {
             for i in 0 ..< gridSize.columns {
                 block(index, MFGridLocation(h: i, v: j))
-                index += 1
+                cell.index += 1
+                cell.gridLocation = MFGridLocation(h: i, v: j)
             }
         }
     }
     
-    /// Scan a single row.
+    /// Scans a grid by passing cell in closure
     
-    public func scanRow(_ row: Int = 0, _ block: @escaping MFGridLocationClosure) {
-        for i in 0 ..< gridSize.columns {
-            block(MFGridLocation(h: i, v: row))
+    public func cellScan(_ block: @escaping MFGridScannerClosure) {
+        let  cell = Cell(size: grid?.cellSize)
+        for j in 0 ..< gridSize.rows {
+            cell.frame?.origin.x = 0
+            for i in 0 ..< gridSize.columns {
+                block(self)
+                cell.index += 1
+                cell.gridLocation = MFGridLocation(h: i, v: j)
+                cell.fractionalFrame.origin.x += gridSize.fractionalCellSize.width
+            }
+            cell.fractionalFrame.origin.y += gridSize.fractionalCellSize.height
+            if let cellSize = cell.cellSize {
+                cell.frame?.origin.y += cellSize.height
+            }
+        }
+    }
+
+    public func scanRow(_ row: Int = 0, _ block: @escaping MFGridScannerClosure) {
+        let cell = Cell()
+        for _ in 0 ..< gridSize.columns {
+            block(self)
+            cell.index += 1
         }
     }
     
     /// Scan a single column.
     
-    public func scanColumn(_ column: Int = 0, _ block: @escaping MFGridLocationClosure) {
-        for j in 0 ..< gridSize.rows {
-            block(MFGridLocation(h: column, v: j))
+    public func scanColumn(_ column: Int = 0, _ block: @escaping MFGridScannerClosure) {
+        let cell = Cell()
+        for _ in 0 ..< gridSize.rows {
+            block(self)
+            cell.index += UInt(gridSize.columns)
         }
     }
     
-    /// Scans a grid by passing:
-    /// - cell index
-    /// - location in grid
-    /// - fractional location in frame ( 0..1, 0..1 )
-    /// - location in grid frame ( 0..width, 0..height )
-    ///
-    public func gridScan(grid: MFGrid,
-                        _ block: @escaping MFGridGeoScanClosure) {
-        geometricScan(cellSize: grid.cellSize, block)
-    }
-    
-    public func geometricScan(cellSize: CGSize,
-                              _ block: @escaping MFGridGeoScanClosure) {
-        let cell = MFGeoGridCell(gridLocation: .zero,
-                                 cellSize: cellSize)
-
-        for j in 0 ..< gridSize.rows {
-            for i in 0 ..< gridSize.columns {
-                cell.gridLocation = MFGridLocation(h: i, v: j)
-                block(cell)
-            }
-        }
-    }
-    
-    public func geometricIndexedScan(cellSize: CGSize,
-                              _ block: @escaping MFGridGeoScanIndexedClosure) {
-        var index = 0
-        let cell = MFGeoGridCell(gridLocation: .zero,
-                                 cellSize: cellSize)
-
-        for j in 0 ..< gridSize.rows {
-            for i in 0 ..< gridSize.columns {
-                cell.gridLocation = MFGridLocation(h: i, v: j)
-                block(index, cell)
-                index += 1
-            }
-        }
-    }
-    
-    /// Scans a grid by passing:
-    /// - cell index
-    /// - location in grid
-    /// - fractional location in frame ( 0..1, 0..1 )
-    /// - location in grid frame ( 0..width, 0..height )
-    public func geometricScanRow(_ row: Int = 0, grid: MFGrid, _ block: @escaping MFGridGeoScanClosure) {
-        let cellSize = grid.cellSize
-
-        for i in 0 ..< gridSize.columns {
-            let cell = MFGeoGridCell(gridLocation: MFGridLocation(h: i, v: row),
-                                     cellSize: cellSize)
-            block(cell)
-        }
-    }
-    
-    /// Scans a grid by passing:
-    /// - cell index
-    /// - location in grid
-    /// - fractional location in frame ( 0..1, 0..1 )
-    /// - location in grid frame ( 0..width, 0..height )
-    public func geometricScanColumn(_ column: Int = 0, grid: MFGrid, _ block: @escaping MFGridGeoScanClosure) {
-        let cellSize = grid.cellSize
-        for j in 0 ..< gridSize.columns {
-            let cell = MFGeoGridCell(gridLocation: MFGridLocation(h: column, v: j),
-                                     cellSize: cellSize)
-            block(cell)
-        }
-    }
-    
-    
+    /// TODO: Move in procedural scanner
     public func scanDiagonal(offset: (h: Int, v: Int), _ block: (MFGridLocation)->Void) {
         var i: Int = min(offset.h, gridSize.columns - 1)
         var j: Int = min(offset.v, gridSize.rows - 1)

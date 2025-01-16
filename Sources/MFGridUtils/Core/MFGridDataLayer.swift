@@ -26,20 +26,20 @@ public typealias MFGeoGridProcessorClosure<T> = (Int, MFGridCell) -> T
 /// It passes the grid cell and a value
 /// It returns a value
 
-public typealias MFDataGridGeoScanClosure<CellDataType> = (MFGridCell, CellDataType?) -> CellDataType?
+public typealias MFDataGridGeoScanClosure<CellDataType> = (MFGridScanner.Cell, CellDataType?) -> CellDataType?
 
 /// MFGridDataLayer stores data by [column, raw]
 
 public class MFGridDataLayer<CellDataType>: DataLayerProtocol {
     
     public init(grid: MFGrid,
-                allocator: @escaping(MFGridCell)->CellDataType?,
-                cellRenderer: @escaping (MFGridCell, CGContext, CellDataType)->Void) {
+                allocator: @escaping(MFGridScanner.Cell)->CellDataType?,
+                cellRenderer: @escaping (MFGridScanner.Cell, CGContext, CellDataType)->Void) {
         self.grid = grid
         self.allocator = allocator
         self.cellRenderer = cellRenderer
-        grid.scan { cell in
-            self.cellData[cell.key] = allocator(cell)
+        grid.scan { scanner in
+            self.cellData[scanner.cell.key] = allocator(scanner.cell)
         }
     }
     
@@ -47,8 +47,8 @@ public class MFGridDataLayer<CellDataType>: DataLayerProtocol {
     
     weak var grid: MFGrid?
         
-    let allocator: (MFGridCell)->CellDataType?
-    let cellRenderer: (MFGridCell, CGContext, CellDataType)->Void
+    let allocator: (MFGridScanner.Cell)->CellDataType?
+    let cellRenderer: (MFGridScanner.Cell, CGContext, CellDataType)->Void
     
     /// cellData are stored in a dictionary
     var cellData = [MFGridLocationKey:CellDataType]()
@@ -63,7 +63,7 @@ public class MFGridDataLayer<CellDataType>: DataLayerProtocol {
     /// Retrieve data in the grid
     
     public func data(initializeCellsIfNeeded: Bool,
-                     for gridCell: MFGridCell)-> CellDataType? {
+                     for gridCell: MFGridScanner.Cell)-> CellDataType? {
         let data: CellDataType? = cellData[gridCell.key]
         if data != nil && initializeCellsIfNeeded {
             if let data = allocator(gridCell) {
@@ -78,15 +78,17 @@ public class MFGridDataLayer<CellDataType>: DataLayerProtocol {
     public func scan(intializeCellsIfNeeded: Bool,
                      cellSize: CGSize,
                      closure: @escaping MFDataGridGeoScanClosure<CellDataType>) {
-        grid?.scan() { cell in
+        grid?.scan() { scanner in
             let data = self.data(initializeCellsIfNeeded: intializeCellsIfNeeded,
-                                 for: cell)
+                                 for: scanner.cell)
             
-            if let newData = closure(cell, data) {
-                self.write(data: newData, at: cell.gridLocation)
+            if let newData = closure(scanner.cell, data) {
+                self.write(data: newData, at: scanner.cell.gridLocation)
             }
         }
     }
+    
+    // MARK: - Rendering
     
     public func renderData(in context: CGContext) {
         guard let grid = grid else { return }
@@ -98,4 +100,6 @@ public class MFGridDataLayer<CellDataType>: DataLayerProtocol {
             return data
         }
     }
+    
+    
 }

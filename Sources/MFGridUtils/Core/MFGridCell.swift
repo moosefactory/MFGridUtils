@@ -31,10 +31,12 @@ public extension MFGridCellProtocol {
 
 /// The class that is passed for geometric or rendering operationss
 ///
-/// Note that this is not a structure
-public class MFGridCell: MFGridCellProtocol {
-        
+/// The principle of the cell is to be create once and modified during the loops.
+
+public class MFGridCell {
     public var gridLocation: MFGridLocation
+    
+    public var key: MFGridLocationKey { gridLocation.asKey }
     
     public init(gridLocation: MFGridLocation) {
         self.gridLocation = gridLocation

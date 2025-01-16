@@ -21,7 +21,6 @@ public extension MFGrid {
         return context
     }
     
-    
     func render(context: CGContext,
                 style: MFGridStyle) {
         // Lines
@@ -33,21 +32,26 @@ public extension MFGrid {
         context.setFillColor(style.fillColor.cgColor)
         context.setStrokeColor(style.strokeColor.cgColor)
         
+        // Renders the background
         context.addRect(frame)
         context.fillPath()
         
-        dataLayers.forEach { layer in
-            layer.dataLayer.renderData(in: context)
-        }
-                
-        MFGridScanner(gridSize: gridSize).geometricScanRow(grid: self) { cell in
-            context.move(to: cell.locationInFrame)
-            context.addLine(to: CGPoint(x: cell.locationInFrame.x, y: size.height))
+        // Do some extra renderings before drawing the lines
+        renderContent(in: context)
+        
+        // Draw the horizontal and vertical grid lines
+        scanner().scanRow { scanner in
+            if let cellFrame = scanner.cell.frame {
+                context.move(to: cellFrame.origin)
+                context.addLine(to: CGPoint(x: cellFrame.minX, y: size.height))
+            }
         }
 
-        MFGridScanner(gridSize: gridSize).geometricScanColumn(grid: self) { cell in
-            context.move(to: cell.locationInFrame)
-            context.addLine(to: CGPoint(x: size.width, y: cell.locationInFrame.y))
+        scanner().scanColumn { scanner in
+            if let cellFrame = scanner.cell.frame {
+                context.move(to: cellFrame.origin)
+                context.addLine(to: CGPoint(x: size.width, y: cellFrame.height))
+            }
         }
         
         context.strokePath()

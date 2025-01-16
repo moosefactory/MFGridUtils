@@ -25,6 +25,7 @@ public struct MFGridLocationKey: Hashable {
 
 public extension MFGridLocation {
     
+    /// Returns the grid location expresssed as key
     var asKey: MFGridLocationKey {
         MFGridLocationKey(location: self)
     }
