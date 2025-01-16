@@ -17,6 +17,8 @@ public class MFCAGridLayer: CALayer {
     
     /// The layer grid.
     public var grid: MFGrid { didSet {
+        self.bounds = grid.frame
+        setNeedsDisplay()
         setNeedsLayout()
     }}
     

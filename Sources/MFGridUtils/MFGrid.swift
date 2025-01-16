@@ -18,7 +18,12 @@ import CoreGraphics
 
 public class MFGrid {
     
-    public var gridSize: MFGridSize
+    var sizeDidChange: ((MFGrid, MFGridSize)->Void)?
+    
+    public var gridSize: MFGridSize { didSet {
+        sizeDidChange?(self, oldValue)
+    }}
+    
     public var cellSize: CGSize
     
     public struct GridRect {
@@ -35,9 +40,11 @@ public class MFGrid {
     ///   - gridSize: The size of the grid ( columns x rows )
     ///   - cellSize: An optional grid cell size
     public init(gridSize:MFGridSize,
-                cellSize: CGSize = .zero) {
+                cellSize: CGSize = .zero,
+                sizeDidChange: ((MFGrid, MFGridSize)->Void)? = nil) {
         self.gridSize = gridSize
         self.cellSize = cellSize
+        self.sizeDidChange = sizeDidChange
     }
     
     /// Returns the grid frame expressed in columns and rows
@@ -62,6 +69,7 @@ extension MFGrid {
             closure(scanner)
         }
     }
+
 
     /// Converts cell index to grid location
     ///
@@ -120,5 +128,12 @@ extension MFGrid {
         let gridLoc = gridLocation.asCGFloats
         return CGPoint(x: gridLoc.h * cellSize.width,
                               y: gridLoc.v * cellSize.height)
+    }
+}
+
+extension MFGrid: CustomStringConvertible {
+    
+    public var description: String {
+        "􀮟 Grid \(gridSize) - Cell: \(cellSize.dec3) - \(frame.dec3)"
     }
 }

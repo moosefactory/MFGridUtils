@@ -144,6 +144,13 @@ public extension MFGridSize {
     }
 }
 
+extension MFGridSize: CustomStringConvertible {
+    
+    public var description: String {
+        "\(columns)x\(rows)"
+    }
+}
+
 public extension MFGrid {
     
     // Returns a grid scanner
@@ -159,3 +166,4 @@ public extension CGSize {
         MFGridSize(columns: UInt(abs(width)), rows: UInt(abs(height)))
     }
 }
+

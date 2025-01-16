@@ -17,6 +17,7 @@ import MFFoundation
 /// or simply with a MFGridSize.
 
 public typealias MFGridScanner = MFGrid.Scanner
+public typealias MFGridScannerCell = MFGrid.Scanner.Cell
 
 public typealias MFGridScannerIndexAndLocationClosure = (Int, MFGridLocation)->Void
 public typealias MFGridScannerClosure = (MFGridScanner)->Void
@@ -39,7 +40,7 @@ public extension MFGrid {
             /// The index of the cell
             /// Can be used to map to arrays or buffers
             
-            public fileprivate(set) var index: UInt = 0
+            public fileprivate(set) var index: Int = 0
             
             /// The location in grid ( column, row) of the cell
             
@@ -162,7 +163,7 @@ public extension MFGrid {
             cell = Cell(grid: grid)
             for j in 0 ..< grid.gridSize.rows {
                 block(self)
-                cell.index += UInt(grid.gridSize.rows)
+                cell.index += grid.gridSize.rows
                 cell.gridLocation = MFGridLocation(h: column, v: j)
                 cell.fractionalFrame.origin.y += grid.gridSize.fractionalCellSize.height
                 if let cellSize = cell.cellSize {
