@@ -10,11 +10,12 @@
 import Foundation
 import CoreGraphics
 
-/// A location in grid, expressed by column index (h) and row index (v)
 
-public extension MFGrid {
+public extension MFGrid {
     
-    public struct Location: Hashable {
+    /// A location in grid, expressed by column index (h) and row index (v)
+
+    struct Location: Hashable {
         
         public static let zero = MFGridLocation(h: 0, v: 0)
         

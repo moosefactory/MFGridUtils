@@ -4,18 +4,22 @@
 //  MooseFactory     ©2025 - Moose
 //    Software
 //  ------------------------------------------
-//  􀈿 MFGridCALayer.swift
+//  􀈿 MFCAGridLayer.swift
 //  􀓣 Created by Tristan Leblanc on 16/01/2025.
 
+import Foundation
+import CoreGraphics
+import QuartzCore
+
 /// A subclass of CALayer that holds a MFGrid structure and properly render grid squares.
-///
-class MFGridCALayer: CALayer {
+
+public class MFCAGridLayer: CALayer {
     
     /// The layer grid.
-    var grid: MFGrid { didSet {
+    public var grid: MFGrid { didSet {
         setNeedsLayout()
     }}
-
+    
     // MARK: - Initialization
     
     /// Init a new layer with a grid.
@@ -30,9 +34,9 @@ class MFGridCALayer: CALayer {
     
     /// Init a new layer from a grid layer
     /// This function is needed by the system to manage resizing and animations
-
+    
     override init(layer: Any) {
-        if let gridLayer = layer as? MFGridCALayer {
+        if let gridLayer = layer as? MFCAGridLayer {
             grid = gridLayer.grid
         } else {
             fatalError("Why is this layer being created by a random layer?")
@@ -41,14 +45,15 @@ class MFGridCALayer: CALayer {
     }
     
     /// Init from coder not supported
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     // MARK: - Rendering
     
-    override func draw(in ctx: CGContext) {
+    public override func draw(in ctx: CGContext) {
         grid.render(context: ctx, style: MFGridStyle())
     }
+    
 }

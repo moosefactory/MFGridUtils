@@ -51,13 +51,13 @@ public class MFGridDataLayer<CellDataType>: DataLayerProtocol {
     let cellRenderer: (MFGridScanner.Cell, CGContext, CellDataType)->Void
     
     /// cellData are stored in a dictionary
-    var cellData = [MFGridLocationKey:CellDataType]()
+    var cellData = [MFGridLocation:CellDataType]()
 
     /// Store data
     
     public func write(data: CellDataType,
                       at gridLoc: MFGridLocation) {
-        cellData[gridLoc.asKey] = data
+        cellData[gridLoc] = data
     }
     
     /// Retrieve data in the grid

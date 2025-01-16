@@ -24,7 +24,7 @@ public typealias MFGridScannerClosure = (MFGridScanner)->Void
 public extension MFGrid {
     /// Scans a grid row by row from bottom left corner
     
-    open class Scanner {
+    class Scanner {
         
         /// Scanners use a cell object that is created before the scan and updated in the loops.
         /// All values updates are made using additions, which make the scanner quite fast.
@@ -70,6 +70,8 @@ public extension MFGrid {
             
             // MARK: - Computed Properties
             
+            var key: MFGridLocation { gridLocation }
+            
             // Initialize  new cell attached to the given grid
             
             public init(grid: MFGrid) {
@@ -108,8 +110,7 @@ public extension MFGrid {
             for j in 0 ..< grid.gridSize.rows {
                 for i in 0 ..< grid.gridSize.columns {
                     block(index, MFGridLocation(h: i, v: j))
-                    cell.index += 1
-                    cell.gridLocation = MFGridLocation(h: i, v: j)
+                    index += 1
                 }
             }
         }
@@ -119,11 +120,12 @@ public extension MFGrid {
         public func cellScan(in gridRect: MFGridRect? = nil,
                              _ block: @escaping MFGridScannerClosure) {
             let gridRect = gridRect ?? grid.gridRect
+            
             cell = Cell(grid: grid)
-            for j in 0 ..< grid.gridSize.rows {
+            for j in gridRect.origin.v ..< gridRect.size.rows {
                 cell.frame?.origin.x = 0
                 cell.fractionalFrame.origin.x = 0
-                for i in 0 ..< grid.gridSize.columns {
+                for i in gridRect.origin.h ..< gridRect.size.columns {
                     block(self)
                     cell.index += 1
                     cell.gridLocation = MFGridLocation(h: i, v: j)

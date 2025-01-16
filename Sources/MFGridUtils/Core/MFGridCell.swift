@@ -10,24 +10,20 @@
 import Foundation
 
 
-public protocol MFGridCellProtocol {
-    var gridLocation: MFGridLocation {get set}
-}
-
-public extension MFGridCellProtocol {
-    
-    // A string key to store locations in dictionaries
-    
-    var key: MFGridLocationKey { gridLocation.asKey }
-
-    func fractionalLocation(for gridSize: MFGridSize) -> CGPoint {
-        gridLocation.fractionalLocation(for: gridSize)
-    }
-    
-    func frame(for cellSize: CGSize) -> CGRect {
-        gridLocation.frame(for: cellSize)
-    }
-}
+//public protocol MFGridCellProtocol {
+//    var gridLocation: MFGridLocation {get set}
+//}
+//
+//public extension MFGridCellProtocol {
+//
+//    func fractionalLocation(for gridSize: MFGridSize) -> CGPoint {
+//        gridLocation.fractionalLocation(for: gridSize)
+//    }
+//    
+//    func frame(for cellSize: CGSize) -> CGRect {
+//        gridLocation.frame(for: cellSize)
+//    }
+//}
 
 /// The class that is passed for geometric or rendering operationss
 ///
@@ -35,8 +31,6 @@ public extension MFGridCellProtocol {
 
 public class MFGridCell {
     public var gridLocation: MFGridLocation
-    
-    public var key: MFGridLocationKey { gridLocation.asKey }
     
     public init(gridLocation: MFGridLocation) {
         self.gridLocation = gridLocation
