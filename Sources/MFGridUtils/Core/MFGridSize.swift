@@ -35,6 +35,26 @@ public struct MFGridSize: Codable {
     /// That's all we have unless we provide a grid or a cell size.
     public private(set) var fractionalCellSize: CGSize
 
+    private enum CodingKeys: CodingKey {
+        case columns
+        case rows
+    }
+    
+    public init(from decoder: any Decoder) throws {
+        let container: KeyedDecodingContainer<MFGridSize.CodingKeys> = try decoder.container(keyedBy: MFGridSize.CodingKeys.self)
+        
+        self.columns = try container.decode(Int.self, forKey: MFGridSize.CodingKeys.columns)
+        self.rows = try container.decode(Int.self, forKey: MFGridSize.CodingKeys.rows)
+        self.numberOfCells = columns * rows
+        self.fractionalCellSize = CGSize(width: 1.0 / CGFloat(columns), height: 1.0 / CGFloat(rows))
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container: KeyedEncodingContainer<MFGridSize.CodingKeys> = encoder.container(keyedBy: MFGridSize.CodingKeys.self)
+        try container.encode(self.columns, forKey: MFGridSize.CodingKeys.columns)
+        try container.encode(self.rows, forKey: MFGridSize.CodingKeys.rows)
+    }
+
     // MARK: - Initialisation
     
     /// Init a square grid

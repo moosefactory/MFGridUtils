@@ -25,7 +25,7 @@ public typealias MFGridScannerClosure = (MFGridScanner)->Void
 public extension MFGrid {
     /// Scans a grid row by row from bottom left corner
     
-    class Scanner {
+    open class Scanner {
         
         /// Scanners use a cell object that is created before the scan and updated in the loops.
         /// All values updates are made using additions, which make the scanner quite fast.
