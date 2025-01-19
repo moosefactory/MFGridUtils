@@ -11,6 +11,11 @@ A simple **Foundation** and **CoreGraphics** extension to execute operations on 
 
 Principal types are the following :
 
+### GridSize
+
+A grid size, in columns and rows
+
+
 ### GridLocation
 
 A location in a grid, given column an row
@@ -31,10 +36,6 @@ Cell at index 2 - location: [col:2;row:0]
 Cell at index 99 - location: [col:9;row:9]
 
 ```
-
-### GridSize
-
-A grid size, in columns and rows
 
 ### GridCell
 

@@ -47,6 +47,19 @@ public class MFGrid {
         self.sizeDidChange = sizeDidChange
     }
     
+    /// Initializes a square grid of the given size
+    /// An optional cellSize can be set if a geometric representation is needed
+    /// - Parameters:
+    ///   - gridSize: The size of the square grid (equals columns x rows )
+    ///   - cellSize: An optional grid cell size
+    public init(gridSize: UInt,
+                cellSize: Double = .zero,
+                sizeDidChange: ((MFGrid, MFGridSize)->Void)? = nil) {
+        self.gridSize = MFGridSize(size: gridSize)
+        self.cellSize = CGSize.square(cellSize)
+        self.sizeDidChange = sizeDidChange
+    }
+    
     /// Returns the grid frame expressed in columns and rows
     public var gridRect: MFGridRect { MFGridRect(origin: .zero, size: gridSize) }
     
