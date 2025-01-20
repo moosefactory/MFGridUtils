@@ -127,9 +127,9 @@ public extension MFGrid {
                 cell.frame?.origin.x = 0
                 cell.fractionalFrame.origin.x = 0
                 for i in gridRect.origin.h ..< gridRect.size.columns {
+                    cell.gridLocation = MFGridLocation(h: i, v: j)
                     block(self)
                     cell.index += 1
-                    cell.gridLocation = MFGridLocation(h: i, v: j)
                     cell.fractionalFrame.origin.x += grid.gridSize.fractionalCellSize.width
                     if let cellSize = cell.cellSize {
                         cell.frame?.origin.x += cellSize.width
@@ -147,9 +147,9 @@ public extension MFGrid {
         public func scanRow(_ row: Int = 0, _ block: @escaping MFGridScannerClosure) {
             cell = Cell(grid: grid)
             for i in 0 ..< grid.gridSize.columns {
+                cell.gridLocation = MFGridLocation(h: i, v: row)
                 block(self)
                 cell.index += 1
-                cell.gridLocation = MFGridLocation(h: i, v: row)
                 cell.fractionalFrame.origin.x += grid.gridSize.fractionalCellSize.width
                 if let cellSize = cell.cellSize {
                     cell.frame?.origin.x += cellSize.width
@@ -162,9 +162,9 @@ public extension MFGrid {
         public func scanColumn(_ column: Int = 0, _ block: @escaping MFGridScannerClosure) {
             cell = Cell(grid: grid)
             for j in 0 ..< grid.gridSize.rows {
+                cell.gridLocation = MFGridLocation(h: column, v: j)
                 block(self)
                 cell.index += grid.gridSize.rows
-                cell.gridLocation = MFGridLocation(h: column, v: j)
                 cell.fractionalFrame.origin.y += grid.gridSize.fractionalCellSize.height
                 if let cellSize = cell.cellSize {
                     cell.frame?.origin.y += cellSize.height

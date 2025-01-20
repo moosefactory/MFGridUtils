@@ -31,6 +31,7 @@ public extension MFGrid {
         }
         
         /// Hash the coordinates to make a unique identifier
+
         public func hash(into hasher: inout Hasher) {
             hasher.combine(h)
             hasher.combine(v)
