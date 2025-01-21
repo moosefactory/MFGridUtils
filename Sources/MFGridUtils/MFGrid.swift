@@ -18,18 +18,23 @@ import CoreGraphics
 
 public class MFGrid {
     
+    public struct GridRect {
+        public init(origin: MFGridLocation, size: MFGridSize) {
+            self.origin = origin
+            self.size = size
+        }
+        
+        var origin: MFGridLocation
+        var size: MFGridSize
+    }
+
+    public var cellSize: CGSize
+    
     var sizeDidChange: ((MFGrid, MFGridSize)->Void)?
     
     public var gridSize: MFGridSize { didSet {
         sizeDidChange?(self, oldValue)
     }}
-    
-    public var cellSize: CGSize
-    
-    public struct GridRect {
-        var origin: MFGridLocation = .zero
-        var size: MFGridSize = .zero
-    }
 
     // MARK: - Initialisation
     
@@ -105,8 +110,12 @@ extension MFGrid {
     /// - Parameter cell: the cell we want to know the frame
     /// - Returns: The CGRect frame of the cell
     
-    public func rect(for cell: MFGridCell) -> CGRect {
+    public func rect(for cell: MFGridScannerCell) -> CGRect {
         rectForCell(at: cell.gridLocation)
+    }
+    
+    func contains(_ gridLocation: MFGridLocation)  -> Bool {
+        return gridSize.containsGridLocation(gridLocation)
     }
     
     /// Returns the frame of the cell at given location, in grid frame coordinates.
@@ -122,10 +131,11 @@ extension MFGrid {
     
     // Returns a GridCell object describing the cell at given location.
     
-    public func cell(at location: MFGridLocation, offset: (Int, Int) = (0,0)) -> MFGridCell {
+    public func cell(at location: MFGridLocation, offset: (Int, Int) = (0,0)) -> MFGridScannerCell? {
         let gridLocation = MFGridLocation(h: location.h + offset.0,
                                           v: location.v + offset.1)
-        return MFGeoGridCell(gridLocation: gridLocation, grid: self)
+        guard contains(gridLocation) else { return nil }
+        return MFGridScannerCell(grid: self, gridLocation: gridLocation)
     }
     
     /// returns the grid location (column, row) for a given location in (pixels) in grid frame

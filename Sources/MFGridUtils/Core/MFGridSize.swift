@@ -128,8 +128,7 @@ public struct MFGridSize: Codable {
     /// Returns a random location in grid
 
     public func random() -> MFGridLocation {
-        MFGridLocation(h: Int.random(max: columns - 1),
-                     v: Int.random(max: rows - 1) )
+        MFGridLocation(h: Int.random(max: columns - 1), v: Int.random(max: rows - 1) )
     }
 
     /// clamp a gridlocation to grid size

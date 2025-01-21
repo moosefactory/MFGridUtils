@@ -29,7 +29,7 @@ public extension MFGrid {
         
         /// Scanners use a cell object that is created before the scan and updated in the loops.
         /// All values updates are made using additions, which make the scanner quite fast.
-        public class Cell: CustomStringConvertible {
+        public class Cell: MFGridCellProtocol, CustomStringConvertible {
             
             public var description: String {
                 [
@@ -44,7 +44,7 @@ public extension MFGrid {
             
             /// The location in grid ( column, row) of the cell
             
-            public fileprivate(set) var gridLocation: MFGridLocation = .zero
+            public var gridLocation: MFGridLocation
             
             /// The frame of the cell, in [0.0,1.0] range
             /// Bottom left frame is {0, 0, 1.0 / gridSize.columns, 1.0 / gridSize.rows)
@@ -62,7 +62,11 @@ public extension MFGrid {
             /// Bottom left frame is {0,0,cellSize.width, cellSize.height)
             
             public fileprivate(set) var frame: CGRect?
+       
+            public var location: CGPoint? { frame?.origin }
             
+            public var fractionalLocation: CGPoint { fractionalFrame.origin }
+
             /// An optional grid.
             /// Scanner can be created with a grid, heriting of its gridSize and cellSize properties
             /// If a data grid is set, the data can be accessed more easily and safely in the iterator
@@ -75,10 +79,11 @@ public extension MFGrid {
             
             // Initialize  new cell attached to the given grid
             
-            public init(grid: MFGrid) {
+            public init(grid: MFGrid, gridLocation: MFGridLocation = .zero) {
                 self.cellSize = grid.cellSize
                 self.frame =  CGRect(origin: .zero, size: grid.cellSize)
                 self.fractionalFrame.size = grid.gridSize.fractionalCellSize
+                self.gridLocation = gridLocation
             }
         }
         
@@ -120,12 +125,21 @@ public extension MFGrid {
         
         public func cellScan(in gridRect: MFGridRect? = nil,
                              _ block: @escaping MFGridScannerClosure) {
+           
+            // If there is no clipping, we scan the full grid
             let gridRect = gridRect ?? grid.gridRect
             
-            cell = Cell(grid: grid)
+            guard let originCell = grid.cell(at: gridRect.origin) else { return }
+
+            let startX = originCell.location?.x ?? 0
+            let startY = originCell.location?.y ?? 0
+            let startXf = originCell.fractionalLocation.x
+            let startYf = originCell.fractionalLocation.y
+
+            cell = originCell
             for j in gridRect.origin.v ..< gridRect.size.rows {
-                cell.frame?.origin.x = 0
-                cell.fractionalFrame.origin.x = 0
+                cell.frame?.origin.x = startX
+                cell.fractionalFrame.origin.x = startXf
                 for i in gridRect.origin.h ..< gridRect.size.columns {
                     cell.gridLocation = MFGridLocation(h: i, v: j)
                     block(self)

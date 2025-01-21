@@ -10,26 +10,17 @@
 import Foundation
 
 
-//public protocol MFGridCellProtocol {
-//    var gridLocation: MFGridLocation {get set}
-//}
-//
-//public extension MFGridCellProtocol {
-//
-//    func fractionalLocation(for gridSize: MFGridSize) -> CGPoint {
-//        gridLocation.fractionalLocation(for: gridSize)
-//    }
-//    
-//    func frame(for cellSize: CGSize) -> CGRect {
-//        gridLocation.frame(for: cellSize)
-//    }
-//}
+public protocol MFGridCellProtocol {
+    var gridLocation: MFGridLocation { get set }
+}
 
-/// The class that is passed for geometric or rendering operationss
-///
-/// The principle of the cell is to be create once and modified during the loops.
+public protocol MFGeoGridCellProtocol: MFGridCellProtocol {
+    var cellSize: CGSize { get }
+    var frame: CGRect { get }
+}
 
-public class MFGridCell {
+
+public class MFGridCell: MFGridCellProtocol {
     public var gridLocation: MFGridLocation
     
     public init(gridLocation: MFGridLocation) {
@@ -37,45 +28,25 @@ public class MFGridCell {
     }
 }
 
-public class MFGeoGridCell: MFGridCell {
-        
-    public var cellSize: CGSize
+public class MFGeoGridCell: MFGridCell, MFGeoGridCellProtocol {
+    
+    public var cellSize: CGSize { grid.cellSize }
+    
+    
+    public var grid: MFGrid
 
-    public init(gridLocation: MFGridLocation,
-                cellSize: CGSize) {
-        self.cellSize = cellSize
-        super.init(gridLocation: gridLocation)
-    }
-
-    public init(gridLocation: MFGridLocation,
-                grid: MFGrid) {
+    public init(gridLocation: MFGridLocation, grid: MFGrid) {
         self.grid = grid
-        self.cellSize = grid.cellSize
         super.init(gridLocation: gridLocation)
     }
 
-    public var locationInFrame: CGPoint { gridLocation.toPoint(for: cellSize) }
-    
-    public var frame: CGRect { gridLocation.frame(for: cellSize) }
-
-    // An optional grid object that can be passed to the cell
-    public var grid: MFGrid? = nil
-
-    // Return direct neighbouring cells
-    
-    public var neighboursLocations: [MFGridLocation] {
-        let h = gridLocation.h
-        let v = gridLocation.v
-        
-        let offsets = [
-            (-1,-1), (0,-1), (1,-1),
-            (-1,0), (1,0),
-            (-1,1), (0,1), (1,1),
-        ]
-        
-        return offsets.map { offset in
-            MFGridLocation(h: h + offset.0, v: v + offset.1)
-        }
+    public var location: CGPoint {
+        gridLocation.toPoint(for: cellSize)
     }
     
+    public var fractionalLocation: CGPoint {
+        gridLocation.fractionalLocation(for: grid.gridSize)
+    }
+
+    public var frame: CGRect { gridLocation.frame(for: cellSize) }
 }

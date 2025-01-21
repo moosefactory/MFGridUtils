@@ -20,14 +20,15 @@ public class MFSKGridNode: SKSpriteNode {
     
     public var grid: MFGrid
     
-    public var gridStyle = MFGridStyle()
+    public var gridStyle: MFGridStyle
     
     // MARK:  Initialisation
     
     /// Init a grid node using grid and cell sizes
     
-    public init(grid: MFGrid) {
+    public init(grid: MFGrid, gridStyle: MFGridStyle = MFGridStyle()) {
         self.grid = grid
+        self.gridStyle = gridStyle
         super.init(texture: .none,
                    color: .clear,
                    size: grid.frame.size)
@@ -37,6 +38,7 @@ public class MFSKGridNode: SKSpriteNode {
     required init?(coder aDecoder: NSCoder) {
         self.grid = MFGrid(gridSize: MFGridSize(size: 100),
                            cellSize: CGSize.square(30))
+        self.gridStyle = MFGridStyle()
         super.init(coder: aDecoder)
         
         updateGrid()
