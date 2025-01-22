@@ -124,9 +124,7 @@ extension MFGrid {
 
     public func rectForCell(at gridLocation: MFGridLocation) -> CGRect {
         let location = gridLocation.toPoint(for: cellSize)
-        let offset = frame.boundsCenter
         return CGRect(origin: location, size: cellSize)
-            .offsetBy(dx: -offset.x, dy: -offset.y)
     }
     
     // Returns a GridCell object describing the cell at given location.

@@ -136,11 +136,14 @@ public extension MFGrid {
             let startXf = originCell.fractionalLocation.x
             let startYf = originCell.fractionalLocation.y
 
+            let lastRow = min(gridRect.origin.v + gridRect.size.rows, grid.gridSize.rows)
+            let lastColumn = min(gridRect.origin.h + gridRect.size.columns, grid.gridSize.columns)
+
             cell = originCell
-            for j in gridRect.origin.v ..< gridRect.size.rows {
+            for j in gridRect.origin.v ..< lastRow {
                 cell.frame?.origin.x = startX
                 cell.fractionalFrame.origin.x = startXf
-                for i in gridRect.origin.h ..< gridRect.size.columns {
+                for i in gridRect.origin.h ..< lastColumn {
                     cell.gridLocation = MFGridLocation(h: i, v: j)
                     block(self)
                     cell.index += 1
@@ -183,18 +186,6 @@ public extension MFGrid {
                 if let cellSize = cell.cellSize {
                     cell.frame?.origin.y += cellSize.height
                 }
-            }
-        }
-        
-        /// TODO: Move in procedural scanner
-
-        public func scanDiagonal(offset: (h: Int, v: Int), _ block: (MFGridLocation)->Void) {
-            var i: Int = min(offset.h, grid.gridSize.columns - 1)
-            var j: Int = min(offset.v, grid.gridSize.rows - 1)
-            while i < grid.gridSize.columns && j < grid.gridSize.rows {
-                block(MFGridLocation(h: i, v: j))
-                i += 1
-                j += 1
             }
         }
     }
