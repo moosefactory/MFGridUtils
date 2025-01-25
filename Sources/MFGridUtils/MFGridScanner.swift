@@ -132,10 +132,7 @@ public extension MFGrid {
             guard let originCell = grid.cell(at: gridRect.origin) else { return }
 
             let startX = originCell.location?.x ?? 0
-            let startY = originCell.location?.y ?? 0
             let startXf = originCell.fractionalLocation.x
-            let startYf = originCell.fractionalLocation.y
-
             let lastRow = min(gridRect.origin.v + gridRect.size.rows, grid.gridSize.rows)
             let lastColumn = min(gridRect.origin.h + gridRect.size.columns, grid.gridSize.columns)
 

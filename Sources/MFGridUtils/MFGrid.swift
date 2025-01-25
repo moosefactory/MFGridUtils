@@ -132,7 +132,7 @@ extension MFGrid {
     public func cell(at location: MFGridLocation, offset: (Int, Int) = (0,0)) -> MFGridScannerCell? {
         let gridLocation = MFGridLocation(h: location.h + offset.0,
                                           v: location.v + offset.1)
-        guard contains(gridLocation) else { return nil }
+        guard contains(gridLocation) else { return nil }
         return MFGridScannerCell(grid: self, gridLocation: gridLocation)
     }
     
