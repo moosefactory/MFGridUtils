@@ -120,16 +120,48 @@ extension MFGridLocation: CustomStringConvertible {
 
 // MARK: - Neighbours locations
 
+public struct MFGridNeighboursOptions: OptionSet {
+    public init(rawValue: Int) {
+        self.rawValue = rawValue
+    }
+    
+    public let rawValue: Int
+    
+    static let cross = MFGridNeighboursOptions(rawValue: 0x01)
+    static let diagonalCross = MFGridNeighboursOptions(rawValue: 0x02)
+
+    static let all: MFGridNeighboursOptions = [.cross, .diagonalCross]
+}
+
 extension MFGridLocation {
     
     public var neighboursLocations: [MFGridLocation] {
-
-        let offsets = [
-            (-1,-1), (0,-1), (1,-1),
-            (-1,0), (1,0),
-            (-1,1), (0,1), (1,1),
-        ]
+        neighboursLocations(options: .all)
+    }
+    
+    public func neighboursLocations(options: MFGridNeighboursOptions) -> [MFGridLocation] {
+        var offsets: [(Int, Int)]
         
+        switch options {
+        case .cross:
+            offsets = [
+                (0,-1),
+                (-1,0), (1,0),
+                (0,1)
+            ]
+        case .diagonalCross:
+            offsets = [
+                (-1,-1), (1,-1),
+                (-1,1), (1,1),
+            ]
+        default:
+            offsets = [
+                (-1,-1), (0,-1), (1,-1),
+                (-1,0), (1,0),
+                (-1,1), (0,1), (1,1),
+            ]
+        }
+                
         return offsets.map { offset in
             MFGridLocation(h: h + offset.0, v: v + offset.1)
         }
