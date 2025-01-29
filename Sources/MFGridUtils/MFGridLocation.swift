@@ -127,10 +127,10 @@ public struct MFGridNeighboursOptions: OptionSet {
     
     public let rawValue: Int
     
-    static let cross = MFGridNeighboursOptions(rawValue: 0x01)
-    static let diagonalCross = MFGridNeighboursOptions(rawValue: 0x02)
+    public static let cross = MFGridNeighboursOptions(rawValue: 0x01)
+    public static let diagonalCross = MFGridNeighboursOptions(rawValue: 0x02)
 
-    static let all: MFGridNeighboursOptions = [.cross, .diagonalCross]
+    public static let all: MFGridNeighboursOptions = [.cross, .diagonalCross]
 }
 
 extension MFGridLocation {
